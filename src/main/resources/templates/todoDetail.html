@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>투두 상세 정보</title>
+    </head>
+    <body>
+        <h1 th:text="${todo.todo}">투두 항목</h1>
+        <p>투두 ID: <span th:text="${todo.todoId}"></span></p>
+        <p>날짜: <span th:text="${todo.todoDate}"></span></p>
+        <p>상태: <span th:text="${todo.todoState ? '완료' : '미완료'}"></span></p>
+        <p>작성자: <span th:text="${todo.todoUser}"></span></p>
+
+        <a th:href="@{/bubbly-todo/list}">목록으로 돌아가기</a>
+        <a th:href="@{|/bubbly-todo/update/${todo.todoId}|}">수정</a>
+        <a th:href="@{|/bubbly-todo/delete/${todo.todoId}|}">삭제</a>
+    </body>
+</html>

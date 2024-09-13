@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+    </head>
+    <body>
+        <h2>todo list</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>투두 ID</th>
+                    <th>투두 항목</th>
+                    <th>날짜</th>
+                    <th>상태</th>
+                    <th>작성자</th>
+                    <th>조회</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="todo : ${todos}">
+                    <td th:text="${todo.todoId}"></td>
+                    <td th:text="${todo.todo}"></td>
+                    <td th:text="${todo.todoDate}"></td>
+                    <td th:text="${todo.todoState ? '완료' : '미완료'}"></td>
+                    <td th:text="${todo.todoUser}"></td>
+                    <td>
+                        <a th:href="@{|/bubbly-todo/list/${todo.todoId}|}">조회</a>
+                    </td>
+                    <td>
+                        <a th:href="@{|/bubbly-todo/delete/${todo.todoId}|}">삭제</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${message}" class="alert alert-success">
+            <p th:text="${message}"></p>
+        </div>
+        <div th:if="${error}" class="alert alert-danger">
+            <p th:text="${error}"></p>
+        </div>
+    </body>
+</html>

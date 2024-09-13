@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>투두 리스트</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            form {
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>투두 리스트</h1>
+
+        <form action="/bubbly-todo/addTodo" method="POST">
+            <label for="todoInput">투두 항목:</label>
+            <input type="text" id="todoInput" name="todo" required placeholder="할 일을 입력하세요" />
+
+            <label for="dateInput">날짜 선택:</label>
+            <input type="date" id="dateInput" name="todoDate" required />
+
+            <label for="categorySelect">카테고리 선택:</label>
+            <select id="categorySelect" name="todoCategoryId" required onchange="updateCategoryId()">
+                <option value="" disabled selected>카테고리를 선택하세요</option>
+                <tr th:each="category: ${categoryList}">
+                    <option th:value="${category.categoryId}" th:text="${category.category}"></option>
+                </tr>
+            </select>
+
+            <p>선택된 카테고리 ID: <span id="selectedCategoryId">없음</span></p>
+
+            <button type="submit">추가하기</button>
+        </form>
+    </body>
+
+    <script>
+        function updateCategoryId() {
+            const selectElement = document.getElementById('categorySelect');
+            const selectedId = selectElement.value; // 선택된 카테고리 ID
+            const displayElement = document.getElementById('selectedCategoryId');
+
+            // 선택된 ID를 출력
+            displayElement.textContent = selectedId ? selectedId : '없음';
+        }
+    </script>
+</html>

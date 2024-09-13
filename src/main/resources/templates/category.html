@@ -1,0 +1,41 @@
+<th>
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+        <head>
+            <meta charset="UTF-8" />
+            <title>Title</title>
+        </head>
+        <body>
+            <form action="/bubbly-todo/category" method="post">
+                category: <input type="text" name="category" /><br />
+                color: <label for="color">색상 선택:</label><br />
+                <input type="color" id="categoryColor" name="categoryColor" required />
+                <input type="submit" value="add category" />
+            </form>
+            <br />
+            <br />
+            <br />
+
+            <h2>list</h2>
+            <table>
+                <tr>
+                    <th>Category ID</th>
+                    <th>Category</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+                <tr th:each="category: ${categoryList}">
+                    <td th:text="${category.categoryId}"></td>
+                    <td th:text="${category.category}"></td>
+                    <td th:text="${category.categoryColor}"></td>
+                    <td>
+                        <a th:href="@{|/bubbly-todo/category/${category.categoryId}|}">조회</a>
+                    </td>
+                    <td>
+                        <a th:href="@{|/bubbly-todo/category/delete/${category.categoryId}|}">삭제</a>
+                    </td>
+                </tr>
+            </table>
+        </body>
+    </html>
+</th>

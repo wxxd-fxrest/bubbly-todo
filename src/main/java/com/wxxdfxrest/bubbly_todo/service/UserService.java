@@ -1,5 +1,7 @@
 package com.wxxdfxrest.bubbly_todo.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -13,13 +15,21 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
 
     // 회원가입 
-    public void userSignup(UserDTO userDTO) {
+    public boolean userSignup(UserDTO userDTO) {
+        // 이메일 중복 확인
+        if (userRepository.findByUseremail(userDTO.getUseremail()).isPresent()) {
+            return false; // 이미 존재하는 이메일
+        }
+    
+        // 새로운 사용자 저장
         UserEntity userEntity = UserEntity.toUserEntity(userDTO);
         userRepository.save(userEntity);
-    }
+        return true; // 회원가입 성공
+    }    
 
     // 로그인 
     public UserDTO userLogin(UserDTO userDTO) {
@@ -32,8 +42,10 @@ public class UserService {
             if(userEntity.getUserpassword().equals(userDTO.getUserpassword())) {
                 // 비밀번호 일치 여부 확인 -> 일치 
                 // entity 객체를 dto 로 변환 후 return
-                userEntity.setLoginstate(true); // 로그인 성공 시 loginstate를 true로 변경
-                userRepository.save(userEntity); // 데이터베이스에 변경 사항 저장
+
+                // setLoginstate 설정 
+                // userEntity.setLoginstate(true); // 로그인 성공 시 loginstate를 true로 변경
+                // userRepository.save(userEntity); // 데이터베이스에 변경 사항 저장
 
                 UserDTO dto = UserDTO.toUserDTO(userEntity);
                 return dto;
@@ -47,9 +59,27 @@ public class UserService {
         }
     }
 
-    // 앱 로딩 시 state 확인 
-    // public boolean isUserLoggedIn(Long userId) {
-    //     Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
-    //     return userEntityOptional.map(UserEntity::isLoginstate).orElse(false); // 로그인 상태 반환
-    // }
+    public List<UserDTO> findAll() {
+        List<UserEntity> memberEntityList = userRepository.findAll();
+        List<UserDTO> memberDTOList = new ArrayList<>();
+        for (UserEntity memberEntity: memberEntityList) {
+            memberDTOList.add(UserDTO.toUserDTO(memberEntity));
+        }
+        return memberDTOList;
+    }
+
+    public UserDTO findByUseremail(String useremail) {
+        System.out.println("Received ID: " + useremail); // ID 출력
+    
+        Optional<UserEntity> optionalUserEntity = userRepository.findByUseremail(useremail);
+        
+        if (optionalUserEntity.isPresent()) {
+            UserDTO userDTO = UserDTO.toUserDTO(optionalUserEntity.get());
+            System.out.println("User found: " + userDTO); // 조회된 사용자 정보 출력
+            return userDTO;
+        } else {
+            System.out.println("No user found with ID: " + useremail); // 사용자 없음 출력
+            return null;
+        }
+    }
 }

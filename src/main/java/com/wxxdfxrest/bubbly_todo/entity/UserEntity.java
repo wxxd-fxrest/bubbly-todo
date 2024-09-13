@@ -23,15 +23,11 @@ public class UserEntity {
     @Column 
     private String username;
 
-    @Column
-    private boolean loginstate;
-
     public static UserEntity toUserEntity(UserDTO userDTO) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUseremail(userDTO.getUseremail());
         userEntity.setUserpassword(userDTO.getUserpassword());
         userEntity.setUsername(userDTO.getUsername());
-        userEntity.setLoginstate(userDTO.isLoginstate());
         return userEntity;
     }
 }

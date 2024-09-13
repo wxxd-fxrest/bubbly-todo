@@ -9,11 +9,11 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class UserDTO {
+    public static UserDTO to;
     private Long id;
     private String useremail;
     private String userpassword;
     private String username;
-    private boolean loginstate; // 추가된 필드
 
     public static UserDTO toUserDTO(UserEntity userEntity) {
         UserDTO userDTO = new UserDTO();
@@ -21,7 +21,6 @@ public class UserDTO {
         userDTO.setUseremail(userEntity.getUseremail());
         userDTO.setUserpassword(userEntity.getUserpassword()); 
         userDTO.setUsername(userEntity.getUsername()); 
-        userDTO.setLoginstate(userEntity.isLoginstate());
         return userDTO;
     }
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>투두 수정</title>
+    </head>
+    <body>
+        <h1>투두 수정</h1>
+        <form th:action="@{|/bubbly-todo/update/${todo.todoId}|}" method="POST">
+            <label for="todo">투두 항목:</label>
+            <input type="text" id="todo" name="todo" th:value="${todo.todo}" required />
+
+            <label for="todoDate">날짜:</label>
+            <input type="date" id="dateInput" name="todoDate" required />
+
+            <label for="todoState">상태:</label>
+            <input type="checkbox" id="todoState" name="todoState" th:checked="${todo.todoState}" />
+            <label for="todoState">완료</label>
+
+            <button type="submit">수정하기</button>
+        </form>
+
+        <a th:href="@{/bubbly-todo/list}">목록으로 돌아가기</a>
+    </body>
+</html>
