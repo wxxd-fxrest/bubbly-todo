@@ -19,12 +19,16 @@ public class CategoryEntity {
 
     @Column
     private String categoryColor;
+
+    @Column
+    private String categoryUser;
     
     public static CategoryEntity toCategoryEntity(CategoryDTO categoryDTO) {
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setCategoryId(categoryDTO.getCategoryId());
         categoryEntity.setCategory(categoryDTO.getCategory());
         categoryEntity.setCategoryColor(categoryDTO.getCategoryColor());
+        categoryEntity.setCategoryUser(categoryDTO.getCategoryUser());
         return categoryEntity;
     }
 }

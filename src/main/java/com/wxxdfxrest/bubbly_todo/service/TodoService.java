@@ -20,19 +20,23 @@ public class TodoService {
     private final CategoryService categoryService;
     
     public boolean addTodo(TodoDTO todoDTO) {
+        if (todoDTO.getTodoCategoryId() == null) {
+            throw new IllegalArgumentException("todoCategoryId must not be null");
+        }
+    
         // 카테고리 정보 조회
         CategoryDTO categoryDTO = categoryService.findCategoryById(todoDTO.getTodoCategoryId());
         
         if (categoryDTO != null) {
-            todoDTO.setTodoCategory(categoryDTO.getCategory()); // 카테고리 이름 설정
-            todoDTO.setTodoCategoryColor(categoryDTO.getCategoryColor()); // 카테고리 색상 설정
+            todoDTO.setTodoCategory(categoryDTO.getCategory());
+            todoDTO.setTodoCategoryColor(categoryDTO.getCategoryColor());
         }
     
         // 새로운 투두 항목 저장
         TodoEntity todoEntity = TodoEntity.toTodoEntity(todoDTO);
         todoRepository.save(todoEntity); // 투두 항목 저장
         return true; // 성공적으로 저장됨
-    }
+    }    
     
 
     public TodoDTO findByTodo(Long id) {
@@ -58,7 +62,6 @@ public class TodoService {
         return false; // ID가 존재하지 않음
     }
 
-
     public void updateTodo(TodoDTO todoDTO) {
         Optional<TodoEntity> optionalTodoEntity = todoRepository.findByTodoId(todoDTO.getTodoId());
         
@@ -67,9 +70,13 @@ public class TodoService {
             todoEntity.setTodo(todoDTO.getTodo());
             todoEntity.setTodoDate(todoDTO.getTodoDate());
             todoEntity.setTodoState(todoDTO.isTodoState());
+            todoEntity.setTodoCategory(todoDTO.getTodoCategory());
             todoRepository.save(todoEntity);
+        } else {
+            System.out.println("Todo not found with ID: " + todoDTO.getTodoId()); // 디버깅
         }
     }
+    
 
     public List<TodoDTO> findTodoAll() {
         List<TodoEntity> todoEntityList = todoRepository.findAll();

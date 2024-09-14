@@ -2,8 +2,6 @@ package com.wxxdfxrest.bubbly_todo.dto;
 
 import lombok.*;
 
-import java.time.LocalDate;
-
 import com.wxxdfxrest.bubbly_todo.entity.TodoEntity;
 
 @Getter
@@ -13,7 +11,7 @@ import com.wxxdfxrest.bubbly_todo.entity.TodoEntity;
 public class TodoDTO {
     private Long todoId;
     private String todo;
-    private LocalDate todoDate;
+    private String todoDate;
     private boolean todoState;
     private String todoUser;
     private Long todoCategoryId; 

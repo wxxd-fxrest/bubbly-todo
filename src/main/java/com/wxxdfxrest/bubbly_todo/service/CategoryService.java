@@ -17,16 +17,16 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public boolean addCategory(CategoryDTO categoryDTO) {
-        // 이메일 중복 확인
-        if (categoryRepository.findByCategoryId(categoryDTO.getCategoryId()).isPresent()) {
-            return false; // 이미 존재하는 이메일
+        // 카테고리 이름 중복 확인
+        if (categoryRepository.findByCategory(categoryDTO.getCategory()).isPresent()) {
+            return false; // 이미 존재하는 카테고리 이름
         }
-    
-        // 새로운 사용자 저장
+        
+        // 새로운 카테고리 저장
         CategoryEntity categoryEntity = CategoryEntity.toCategoryEntity(categoryDTO);
         categoryRepository.save(categoryEntity);
-        return true; // 회원가입 성공
-    }    
+        return true; // 카테고리 저장 성공
+    }
 
     public List<CategoryDTO> findByCategoryAll() {
         List<CategoryEntity> categoryEntityList = categoryRepository.findAll();

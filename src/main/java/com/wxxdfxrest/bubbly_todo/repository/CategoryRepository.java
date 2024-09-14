@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.wxxdfxrest.bubbly_todo.entity.CategoryEntity;
 
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
-    Optional<CategoryEntity> findByCategoryId(Long categoryId);
+    Optional<CategoryEntity> findByCategory(String category);
 }

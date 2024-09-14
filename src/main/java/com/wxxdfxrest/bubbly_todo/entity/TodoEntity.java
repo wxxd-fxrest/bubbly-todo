@@ -3,8 +3,6 @@ package com.wxxdfxrest.bubbly_todo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 import com.wxxdfxrest.bubbly_todo.dto.TodoDTO;
 
 @Entity
@@ -20,7 +18,7 @@ public class TodoEntity {
     private String todo;
 
     @Column
-    private LocalDate todoDate;
+    private String todoDate;
 
     @Column
     private boolean todoState;

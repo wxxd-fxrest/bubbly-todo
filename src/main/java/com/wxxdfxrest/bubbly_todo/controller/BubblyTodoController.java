@@ -2,6 +2,8 @@ package com.wxxdfxrest.bubbly_todo.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,17 +37,22 @@ public class BubblyTodoController {
     }
 
     @PostMapping("/bubbly-todo/addTodo") // 투두 항목 추가
-    public String addTodo(@ModelAttribute TodoDTO todoDTO) {
+    public ResponseEntity<String> addTodo(@RequestBody TodoDTO todoDTO) {
         System.out.println("todoDTO = " + todoDTO); // 디버깅용 출력
-        todoService.addTodo(todoDTO); // 투두 항목 저장
-        return "redirect:/bubbly-todo/list"; // 추가 후 목록 페이지로 리다이렉트
+    
+        boolean todoSaveSuccess = todoService.addTodo(todoDTO); // 서비스 호출
+        
+        if (todoSaveSuccess) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("할 일 추가 성공");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("할 일 추가 실패");
+        }
     }
-
+    
     @GetMapping("/bubbly-todo/list")
-    public String findAllTodo(Model model) {
+    public ResponseEntity<List<TodoDTO>> findAllTodo(Model model) {
         List<TodoDTO> todoDTOList = todoService.findTodoAll();
-        model.addAttribute("todos", todoDTOList);
-        return "todoList";
+        return ResponseEntity.ok(todoDTOList); // 200 OK와 함께 카테고리 리스트 반환
     }
     
     @GetMapping("/bubbly-todo/list/{id}")
@@ -75,46 +82,51 @@ public class BubblyTodoController {
     }
 
     @PostMapping("/bubbly-todo/update/{id}")
-    public String updateTodo(@PathVariable(name = "id") Long id, @ModelAttribute TodoDTO todoDTO, BindingResult bindingResult) {
+    public ResponseEntity<String> updateTodo(@PathVariable(name = "id") Long id, @RequestBody TodoDTO todoDTO, BindingResult bindingResult) {
+        System.out.println("Received TodoDTO: " + todoDTO); // 디버깅 로그 추가
+
         if (bindingResult.hasErrors()) {
-            return "error"; // 오류 처리
+            return ResponseEntity.badRequest().body("입력 값에 오류가 있습니다."); // 오류 처리
         }
-        
+
         todoDTO.setTodoId(id); // ID 설정
         todoService.updateTodo(todoDTO); // 서비스에서 업데이트 메소드 호출
-    
-        return "redirect:/bubbly-todo/list"; // 목록 페이지로 리다이렉트
+
+        return ResponseEntity.ok("투두 항목이 성공적으로 업데이트되었습니다."); // 200 OK와 메시지 반환
     }
 
     @GetMapping("/bubbly-todo/delete/{id}")
-    public String deleteTodo(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<String> deleteTodo(@PathVariable("id") Long id) {
         boolean isDeleted = todoService.deleteTodoById(id);
         
         if (isDeleted) {
-            redirectAttributes.addFlashAttribute("message", "투두 항목이 삭제되었습니다.");
+            return ResponseEntity.ok("투두 항목이 삭제되었습니다."); // 200 OK와 메시지 반환
         } else {
-            redirectAttributes.addFlashAttribute("error", "삭제할 수 없는 투두 항목입니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 수 없는 투두 항목입니다."); // 404 NOT FOUND와 메시지 반환
         }
-
-        return "redirect:/todoList"; // 삭제 후 투두 목록으로 리다이렉트
     }
 
 
 
     // MARK: - Category
     @GetMapping("/bubbly-todo/category") 
-    public String goCategory(Model model) {
+    public ResponseEntity<List<CategoryDTO>> goCategory() {
         List<CategoryDTO> categoryDTOList = categoryService.findByCategoryAll();
-        model.addAttribute("categoryList", categoryDTOList);
-        return "category";
+        return ResponseEntity.ok(categoryDTOList); // 200 OK와 함께 카테고리 리스트 반환
     }
 
     @PostMapping("/bubbly-todo/category")
-    public String addCategory(@ModelAttribute CategoryDTO categoryDTO) {
+    public ResponseEntity<String> addCategory(@RequestBody CategoryDTO categoryDTO) {
         System.out.println("categoryDTO = " + categoryDTO);
-        categoryService.addCategory(categoryDTO);
-        return "category";
-    }
+        
+        boolean saveSuccess = categoryService.addCategory(categoryDTO); // 카테고리 저장 성공 여부 확인
+        
+        if (saveSuccess) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("카테고리 저장 성공"); // 201 Created
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("카테고리 저장 실패: 이미 존재하는 카테고리"); // 400 Bad Request
+        }
+    }    
 
     @GetMapping("/bubbly-todo/category/delete/{id}")
     public String deleteCategofy(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
