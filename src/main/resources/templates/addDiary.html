@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>투두 리스트</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+            form {
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Diary</h1>
+
+        <form action="/bubbly-todo/addDiary" method="POST">
+            <label for="todoInput">일기:</label>
+            <input type="text" id="todoInput" name="diary" required placeholder="할 일을 입력하세요" />
+        
+            <label for="dateInput">날짜 선택:</label>
+            <input type="date" id="dateInput" name="diaryDate" required />
+        
+            <input type="text" id="diaryInput" name="diaryEmoji" placeholder="일기를 작성하세요..." required />
+            <button type="button" id="emojiButton">이모지 선택</button>
+            <div id="emojiList" style="display: none;">
+                <span class="emoji" onclick="insertEmoji('😀')">😀</span>
+                <span class="emoji" onclick="insertEmoji('😂')">😂</span>
+                <span class="emoji" onclick="insertEmoji('😍')">😍</span>
+                <span class="emoji" onclick="insertEmoji('😢')">😢</span>
+                <!-- 더 많은 이모지를 추가할 수 있습니다. -->
+            </div>
+            <button type="submit">추가하기</button>
+        </form>
+        
+        <script>
+            document.getElementById('emojiButton').addEventListener('click', function () {
+                const emojiList = document.getElementById('emojiList');
+                emojiList.style.display = emojiList.style.display === 'none' ? 'block' : 'none';
+            });
+        
+            function insertEmoji(emoji) {
+                const diaryInput = document.getElementById('diaryInput');
+                diaryInput.value += emoji; // 이모지를 입력 필드에 추가
+            }
+        </script>        
+</html>

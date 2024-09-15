@@ -14,6 +14,7 @@ public class TodoDTO {
     private String todoDate;
     private boolean todoState;
     private String todoUser;
+    // Category
     private Long todoCategoryId; 
     private String todoCategory; 
     private String todoCategoryColor; 

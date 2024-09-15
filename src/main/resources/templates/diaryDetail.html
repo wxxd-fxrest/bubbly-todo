@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>투두 상세 정보</title>
+    </head>
+    <body>
+        <h1 th:text="${diary.diary}">Diary 항목</h1>
+        <p>투두 ID: <span th:text="${diary.diaryId}"></span></p>
+        <p>날짜: <span th:text="${diary.diary}"></span></p>
+        <p>상태: <span th:text="${diary.diaryEmoji}"></span></p>
+        <p>작성자: <span th:text="${diary.diaryDate}"></span></p>
+
+        <a th:href="@{/bubbly-todo/diary}">목록으로 돌아가기</a>
+        <a th:href="@{|/bubbly-diary/diary/update/${diary.diaryId}|}">수정</a>
+        <a th:href="@{|/bubbly-diary/diary/delete/${diary.diaryId}|}">삭제</a>
+    </body>
+</html>
