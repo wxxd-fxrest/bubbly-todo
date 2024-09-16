@@ -13,6 +13,7 @@ public class DiaryDTO {
     private String diary;
     private String diaryDate;
     private String diaryEmoji;
+    private String diaryUser;
 
     public static DiaryDTO toDiaryDTO(DiaryEntity diaryEntity) {
         DiaryDTO diaryDTO = new DiaryDTO();
@@ -20,6 +21,7 @@ public class DiaryDTO {
         diaryDTO.setDiary(diaryEntity.getDiary());
         diaryDTO.setDiaryDate(diaryEntity.getDiaryDate());
         diaryDTO.setDiaryEmoji(diaryEntity.getDiaryEmoji());
+        diaryDTO.setDiaryUser(diaryEntity.getDiaryUser());
         return diaryDTO;
     }    
-}
+} 

@@ -1,6 +1,5 @@
 package com.wxxdfxrest.bubbly_todo.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,64 +10,71 @@ import com.wxxdfxrest.bubbly_todo.entity.DiaryEntity;
 import com.wxxdfxrest.bubbly_todo.repository.DiaryRepository;
 
 import lombok.RequiredArgsConstructor;
+import java.util.stream.Collectors; // Collectors 임포트
 
 @Service
 @RequiredArgsConstructor
 public class DiaryService {
     private final DiaryRepository diaryRepository;
 
+   // Email이 동일한 Diary Data 가져오기
+   public List<DiaryDTO> findTodoByUserEmail(String diaryUser) {
+        List<DiaryEntity> diaryEntities = diaryRepository.findByDiaryUser(diaryUser); // Repository에서 이메일로 검색
+        return diaryEntities.stream() // 스트림으로 변환
+            .map(DiaryDTO::toDiaryDTO) // 각 엔티티를 DTO로 변환
+            .collect(Collectors.toList()); // 리스트로 수집
+    }
+
+    // Add Diary
     public boolean addDiary(DiaryDTO diaryDTO) {
-        if (diaryRepository.findByDiaryDate(diaryDTO.getDiaryDate()).isPresent()) {
-            return false; 
+        // Diary 날짜와 사용자 중복 확인
+        Optional<DiaryEntity> existingDiary = diaryRepository.findByDiaryDateAndDiaryUser(diaryDTO.getDiaryDate(), diaryDTO.getDiaryUser());
+        
+        if (existingDiary.isPresent()) {
+            return false; // 이미 존재하는 Diary 날짜와 사용자
         }
-    
-        // 새로운 사용자 저장
+        
+        // 새로운 Diary 저장
         DiaryEntity diaryEntity = DiaryEntity.toDiaryEntity(diaryDTO);
         diaryRepository.save(diaryEntity);
         return true; // Diary 저장 성공
-    }       
+    }    
 
-    public List<DiaryDTO> findDiaryAll() {
-        List<DiaryEntity> diaryEntityList = diaryRepository.findAll();
-        List<DiaryDTO> diaryDTOList = new ArrayList<>();
-        for (DiaryEntity diaryEntity: diaryEntityList) {
-            diaryDTOList.add(DiaryDTO.toDiaryDTO(diaryEntity));
-        }
-        return diaryDTOList;
-    }
+    // Diary Detail
+    public DiaryDTO findByDiaryId(Long diaryId) {
+        Optional<DiaryEntity> diaryEntityOptional = diaryRepository.findById(diaryId);
 
-    public DiaryDTO findByDiaryId(String diaryDate) {
-        System.out.println("Received ID: " + diaryDate); // ID 출력
-    
-        Optional<DiaryEntity> optionalDiaryEntity = diaryRepository.findByDiaryDate(diaryDate);
-        
-        if (optionalDiaryEntity.isPresent()) {
-            DiaryDTO diaryDTO = DiaryDTO.toDiaryDTO(optionalDiaryEntity.get());
-            System.out.println("User found: " + diaryDTO); // 조회된 사용자 정보 출력
-            return diaryDTO;
+        if (diaryEntityOptional.isPresent()) {
+            DiaryEntity diaryEntity = diaryEntityOptional.get();
+            return DiaryDTO.toDiaryDTO(diaryEntity); // DTO 변환
         } else {
-            System.out.println("No user found with ID: " + diaryDate); // 사용자 없음 출력
-            return null;
+            return null; // 다이어리가 존재하지 않으면 null 반환
         }
     }
 
-    public void updateTodo(DiaryDTO diaryDTO) {
-        Optional<DiaryEntity> optionalDiaryEntity = diaryRepository.findByDiaryDate(diaryDTO.getDiaryDate());
+    // Diary Update
+    public void updateDiary(DiaryDTO diaryDTO) {
+        // diaryId를 사용하여 다이어리 엔티티를 찾기
+        Optional<DiaryEntity> optionalDiaryEntity = diaryRepository.findById(diaryDTO.getDiaryId());
         
         if (optionalDiaryEntity.isPresent()) {
             DiaryEntity diaryEntity = optionalDiaryEntity.get(); // 값 가져오기
             diaryEntity.setDiary(diaryDTO.getDiary());
             diaryEntity.setDiaryDate(diaryDTO.getDiaryDate());
             diaryEntity.setDiaryEmoji(diaryDTO.getDiaryEmoji());
+            diaryEntity.setDiaryUser(diaryDTO.getDiaryUser());
             diaryRepository.save(diaryEntity);
         } else {
-            System.out.println("Todo not found with ID: " + diaryDTO.getDiaryDate()); // 디버깅
+            System.out.println("Todo not found with ID: " + diaryDTO.getDiaryId()); // 디버깅
         }
     }
 
-    public boolean deleteDiaryById(Long id) {
-        if (diaryRepository.existsById(id)) {
-            diaryRepository.deleteById(id);
+    // Diary Delete
+    public boolean deleteCategoryByDate(String diaryDate) {
+        Optional<DiaryEntity> diaryEntityOptional = diaryRepository.findByDiaryDate(diaryDate);
+        
+        if (diaryEntityOptional.isPresent()) {
+            diaryRepository.delete(diaryEntityOptional.get()); // 존재하는 경우 삭제
             return true; // 삭제 성공
         }
         return false; // ID가 존재하지 않음

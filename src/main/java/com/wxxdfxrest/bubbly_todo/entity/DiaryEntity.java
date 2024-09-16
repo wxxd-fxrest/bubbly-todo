@@ -8,7 +8,7 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "diary_table")
+@Table(name = "diary_table") 
 public class DiaryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +23,15 @@ public class DiaryEntity {
     @Column
     private String diaryEmoji;
 
+    @Column
+    private String diaryUser;
+
     public static DiaryEntity toDiaryEntity(DiaryDTO diaryDTO) {
         DiaryEntity diaryEntity = new DiaryEntity();
         diaryEntity.setDiary(diaryDTO.getDiary());
         diaryEntity.setDiaryDate(diaryDTO.getDiaryDate());
         diaryEntity.setDiaryEmoji(diaryDTO.getDiaryEmoji());
+        diaryEntity.setDiaryUser(diaryDTO.getDiaryUser());
         return diaryEntity;
     }
 }

@@ -1,14 +1,14 @@
 package com.wxxdfxrest.bubbly_todo.entity;
 
+import com.wxxdfxrest.bubbly_todo.dto.TodoDTO;
+
 import jakarta.persistence.*;
 import lombok.*;
-
-import com.wxxdfxrest.bubbly_todo.dto.TodoDTO;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "todo_table")
+@Table(name = "todo_table") 
 public class TodoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

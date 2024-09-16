@@ -1,6 +1,5 @@
 package com.wxxdfxrest.bubbly_todo.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,13 +11,23 @@ import com.wxxdfxrest.bubbly_todo.entity.TodoEntity;
 import com.wxxdfxrest.bubbly_todo.repository.TodoRepository;
 
 import lombok.RequiredArgsConstructor;
+import java.util.stream.Collectors; // Collectors 임포트
 
 @Service
 @RequiredArgsConstructor
 public class TodoService {
     private final TodoRepository todoRepository;
     private final CategoryService categoryService;
-    
+
+    // Email이 동일한 ToDo Data 가져오기
+    public List<TodoDTO> findTodoByUserEmail(String todoUser) {
+        List<TodoEntity> todoEntities = todoRepository.findByTodoUser(todoUser); // Repository에서 이메일로 검색
+        return todoEntities.stream() // 스트림으로 변환
+            .map(TodoDTO::toTodoDTO) // 각 엔티티를 DTO로 변환
+            .collect(Collectors.toList()); // 리스트로 수집
+    }
+
+    // Add ToDo
     public boolean addTodo(TodoDTO todoDTO) {
         if (todoDTO.getTodoCategoryId() == null) {
             throw new IllegalArgumentException("todoCategoryId must not be null");
@@ -36,9 +45,9 @@ public class TodoService {
         TodoEntity todoEntity = TodoEntity.toTodoEntity(todoDTO);
         todoRepository.save(todoEntity); // 투두 항목 저장
         return true; // 성공적으로 저장됨
-    }    
-    
+    }  
 
+    // 각각의 ToDo 찾기
     public TodoDTO findByTodo(Long id) {
         System.out.println("Received ID: " + id); // ID 출력
     
@@ -54,14 +63,7 @@ public class TodoService {
         }
     }
 
-    public boolean deleteTodoById(Long id) {
-        if (todoRepository.existsById(id)) {
-            todoRepository.deleteById(id);
-            return true; // 삭제 성공
-        }
-        return false; // ID가 존재하지 않음
-    }
-
+    // ToDo Update
     public void updateTodo(TodoDTO todoDTO) {
         Optional<TodoEntity> optionalTodoEntity = todoRepository.findByTodoId(todoDTO.getTodoId());
         
@@ -76,14 +78,13 @@ public class TodoService {
             System.out.println("Todo not found with ID: " + todoDTO.getTodoId()); // 디버깅
         }
     }
-    
 
-    public List<TodoDTO> findTodoAll() {
-        List<TodoEntity> todoEntityList = todoRepository.findAll();
-        List<TodoDTO> todoDTOList = new ArrayList<>();
-        for (TodoEntity todoEntity: todoEntityList) {
-            todoDTOList.add(TodoDTO.toTodoDTO(todoEntity));
+    // ToDo Delete
+    public boolean deleteTodoById(Long id) {
+        if (todoRepository.existsById(id)) {
+            todoRepository.deleteById(id);
+            return true; // 삭제 성공
         }
-        return todoDTOList;
+        return false; // ID가 존재하지 않음
     }
 }

@@ -1,12 +1,12 @@
 package com.wxxdfxrest.bubbly_todo.dto;
 
-import lombok.*;
-
 import com.wxxdfxrest.bubbly_todo.entity.TodoEntity;
+
+import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor 
 @ToString
 public class TodoDTO {
     private Long todoId;
