@@ -37,9 +37,13 @@ public class BubblyTodoController {
     }
 
     // 개인 ToDo List
-    @GetMapping("/bubbly-todo/list/{todoUser}") // 사용자 이메일을 경로 변수로 추가
-    public ResponseEntity<List<TodoDTO>> findAllTodo(@PathVariable(name = "todoUser") String todoUser) {
-        List<TodoDTO> todoDTOList = todoService.findTodoByUserEmail(todoUser); // 사용자 이메일로 투두 목록 가져오기
+    @GetMapping("/bubbly-todo/list/{todoUser}/{todoDate}")
+    public ResponseEntity<List<TodoDTO>> findAllTodo(
+        @PathVariable(name = "todoUser") String todoUser,
+        @PathVariable(name = "todoDate") String todoDate) { // 날짜를 경로 변수로 설정
+    
+        List<TodoDTO> todoDTOList = todoService.findTodoByUserEmailAndDate(todoUser, todoDate); // 이메일과 날짜로 조회
+    
         return ResponseEntity.ok(todoDTOList); // 200 OK와 함께 투두 리스트 반환
     }
 

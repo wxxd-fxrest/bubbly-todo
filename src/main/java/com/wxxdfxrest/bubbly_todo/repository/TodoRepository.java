@@ -9,5 +9,6 @@ import com.wxxdfxrest.bubbly_todo.entity.TodoEntity;
 
 public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
     Optional<TodoEntity> findByTodoId(Long todoId);
-    List<TodoEntity> findByTodoUser(String todoUser); // todoUser로 투두 찾기
-} 
+    List<TodoEntity> findByTodoUserAndTodoDate(String todoUser, String todoDate); // todoDate로 검색
+}
+

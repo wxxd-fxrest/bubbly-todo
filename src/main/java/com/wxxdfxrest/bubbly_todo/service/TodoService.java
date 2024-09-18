@@ -20,13 +20,13 @@ public class TodoService {
     private final CategoryService categoryService;
 
     // Email이 동일한 ToDo Data 가져오기
-    public List<TodoDTO> findTodoByUserEmail(String todoUser) {
-        List<TodoEntity> todoEntities = todoRepository.findByTodoUser(todoUser); // Repository에서 이메일로 검색
-        return todoEntities.stream() // 스트림으로 변환
-            .map(TodoDTO::toTodoDTO) // 각 엔티티를 DTO로 변환
+    public List<TodoDTO> findTodoByUserEmailAndDate(String todoUser, String todoDate) {
+        List<TodoEntity> todoEntities = todoRepository.findByTodoUserAndTodoDate(todoUser, todoDate); // 이메일과 날짜로 검색
+        return todoEntities.stream()
+            .map(TodoDTO::toTodoDTO) // DTO로 변환
             .collect(Collectors.toList()); // 리스트로 수집
     }
-
+    
     // Add ToDo
     public boolean addTodo(TodoDTO todoDTO) {
         if (todoDTO.getTodoCategoryId() == null) {
